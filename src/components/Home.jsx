@@ -9,32 +9,22 @@ import React from "react";
 const Home = () => {
   const [value, setValue] = useState("");
   const [title, setTitle] = useState("");
-  const [searchParams, setSearchParams] = useSearchParams(); // Destructure useSearchParams
-  const pasteId = searchParams.get("pasteId"); // Get pasteId from the search params
+  const [searchParams, setSearchParams] = useSearchParams();
+  const pasteId = searchParams.get("pasteId");
   const pastes = useSelector((state) => state.paste.pastes);
   const dispatch = useDispatch();
 
   const createPaste = () => {
     const paste = {
-      title: title,
+      title,
       content: value,
-      _id:
-        pasteId ||
-        Date.now().toString(36) + Math.random().toString(36).substring(2),
+      _id: pasteId || Date.now().toString(36) + Math.random().toString(36).substring(2),
       createdAt: new Date().toISOString(),
     };
 
-    if (pasteId) {
-      // If pasteId is present, update the paste
-      dispatch(updatePastes(paste));
-    } else {
-      dispatch(addToPastes(paste));
-    }
-
+    pasteId ? dispatch(updatePastes(paste)) : dispatch(addToPastes(paste));
     setTitle("");
     setValue("");
-
-    // Remove the pasteId from the URL after creating/updating a paste
     setSearchParams({});
   };
 
@@ -42,7 +32,6 @@ const Home = () => {
     setTitle("");
     setValue("");
     setSearchParams({});
-    // navigate("/");
   };
 
   useEffect(() => {
@@ -55,80 +44,66 @@ const Home = () => {
     }
   }, [pasteId, pastes]);
 
-
   return (
-    <div className="w-full h-full py-10 max-w-[1200px] mx-auto px-5 lg:px-0">
-      <div className="flex flex-col gap-y-5 items-start">
-        <div className="w-full flex flex-row gap-x-4 justify-between items-center">
+    <div className="min-h-screen w-full bg-gradient-to-b from-gray-900 via-gray-950 to-black text-white py-10 px-4 flex justify-center">
+      <div className="w-full max-w-4xl flex flex-col gap-6">
+        
+        {/* Header Inputs */}
+        <div className="flex flex-col sm:flex-row items-center gap-4">
           <input
             type="text"
-            placeholder="Title"
+            placeholder="Enter a title..."
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            // Dynamic width based on whether pasteId is present
-            className={`${
-              pasteId ? "w-[80%]" : "w-[85%]"
-            } text-white border border-input rounded-md p-2`}
+            className="flex-1 w-full bg-gradient-to-r from-gray-800 to-gray-700 text-white placeholder-gray-400 border border-gray-700 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
           />
+
           <button
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700"
             onClick={createPaste}
+            className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold px-5 py-3 rounded-xl shadow-lg hover:shadow-blue-600/50 transition-all duration-300 whitespace-nowrap"
           >
-            {pasteId ? "Update Paste" : "Create My Paste"}
+            {pasteId ? "Update Paste" : "Create Paste"}
           </button>
 
-        {pasteId &&  <button
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700"
-            onClick={resetPaste}
-          >
-            <PlusCircle size={20} />
-          </button>}
+          {pasteId && (
+            <button
+              onClick={resetPaste}
+              className="p-3 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 rounded-xl shadow-md hover:shadow-pink-600/50 transition-all duration-300"
+            >
+              <PlusCircle size={22} />
+            </button>
+          )}
         </div>
 
-        <div
-          className={`w-full flex flex-col items-start relative rounded bg-opacity-10 border border-[rgba(128,121,121,0.3)] backdrop-blur-2xl`}
-        >
-          <div
-            className={`w-full rounded-t flex items-center justify-between gap-x-4 px-4 py-2 border-b border-[rgba(128,121,121,0.3)]`}
-          >
-            <div className="w-full flex gap-x-[6px] items-center select-none group">
-              <div className="w-[13px] h-[13px] rounded-full flex items-center justify-center p-[1px] overflow-hidden bg-[rgb(255,95,87)]" />
-
-              <div
-                className={`w-[13px] h-[13px] rounded-full flex items-center justify-center p-[1px] overflow-hidden bg-[rgb(254,188,46)]`}
-              />
-
-              <div className="w-[13px] h-[13px] rounded-full flex items-center justify-center p-[1px] overflow-hidden bg-[rgb(45,200,66)]" />
+        {/* Paste Box */}
+        <div className="w-full rounded-2xl border border-gray-800 bg-gradient-to-br from-gray-900/70 to-gray-800/40 backdrop-blur-md overflow-hidden shadow-[0_0_25px_rgba(0,0,0,0.4)] transition-all">
+          
+          {/* Top Bar */}
+          <div className="flex items-center justify-between px-5 py-3 border-b border-gray-700 bg-gradient-to-r from-gray-800/80 to-gray-900/60">
+            <div className="flex items-center gap-2">
+              <div className="w-3.5 h-3.5 rounded-full bg-red-500" />
+              <div className="w-3.5 h-3.5 rounded-full bg-yellow-400" />
+              <div className="w-3.5 h-3.5 rounded-full bg-green-500" />
             </div>
-            {/* Circle and copy btn */}
-            <div
-              className={`text-white w-fit rounded-t flex items-center justify-between gap-x-4 px-4`}
+
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(value);
+                toast.success("Copied to Clipboard", { position: "top-right" });
+              }}
+              className="p-2 rounded-lg hover:bg-gray-700/60 transition-all duration-300 group"
             >
-              {/*Copy  button */}
-              <button
-                className={`flex justify-center items-center  transition-all duration-300 ease-in-out group`}
-                onClick={() => {
-                  navigator.clipboard.writeText(value);
-                  toast.success("Copied to Clipboard", {
-                    position: "top-right",
-                  });
-                }}
-              >
-                <Copy className="group-hover:text-sucess-500" size={20} />
-              </button>
-            </div>
+              <Copy size={20} className="group-hover:text-green-400 transition-colors duration-300" />
+            </button>
           </div>
 
-          {/* TextArea */}
+          {/* Text Area */}
           <textarea
             value={value}
             onChange={(e) => setValue(e.target.value)}
-            placeholder="Write Your Content Here...."
-            className="w-full p-3  focus-visible:ring-0 text-white"
-            style={{
-              caretColor: "#000",
-            }}
-            rows={20}
+            placeholder="Write your content here..."
+            className="w-full h-[400px] p-4 text-gray-100 bg-transparent focus:outline-none resize-none placeholder-gray-500"
+            style={{ caretColor: "#3b82f6" }}
           />
         </div>
       </div>
