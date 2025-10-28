@@ -1,6 +1,5 @@
 import { Copy, PlusCircle } from "lucide-react";
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { addToPastes, updatePastes } from "../redux/pasteSlice";
 import { useSearchParams } from "react-router-dom";
@@ -9,8 +8,10 @@ import React from "react";
 const Home = () => {
   const [value, setValue] = useState("");
   const [title, setTitle] = useState("");
-  const [name, setName] = useState("");
-  const [theme, setTheme] = useState("dark"); // 👈 added theme state
+  const [theme, setTheme] = useState("dark");
+
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("");
 
   const [searchParams, setSearchParams] = useSearchParams();
   const pasteId = searchParams.get("pasteId");
@@ -21,7 +22,9 @@ const Home = () => {
     const paste = {
       title,
       content: value,
-      _id: pasteId || Date.now().toString(36) + Math.random().toString(36).substring(2),
+      _id:
+        pasteId ||
+        Date.now().toString(36) + Math.random().toString(36).substring(2),
       createdAt: new Date().toISOString(),
     };
 
@@ -50,60 +53,49 @@ const Home = () => {
   // --- bakchodi function ---
   function bakchodi(val) {
     const lower = val.toLowerCase();
+    let msg = "";
 
     if (lower === "farhan") {
-      toast.success("Are Farhan bhai...Aap bhut mast bande ho...");
-    }
-    else if (lower === "shahil" || lower==="badar" || lower==="danish" || lower==="shaad") {
-      toast.success("Kam hasa kro , aur kam hilao bsdk...");
-    } 
-    else if (lower === "kamran") {
-      toast.success("Agar jinda rhna h to delhi se bhaag jaao...");
-    } 
-    else if (lower === "golrez") {
-      toast.success("Kam hasa kro bsdk...");
-    } 
-    else if (lower === "nayab") {
-      toast.success("Football kam khelo wrna football bn jaaoge nigga...");
-    } 
-    else if (lower === "adeeb") {
-      toast.success("Le kar hi maanega kya??...");
-    } 
-    else if (lower === "ahmad") {
-      toast.success("Mujhe apne gaadi m kab ghuma rha???????????????????...");
-    } 
-    else if (lower === "tahsin") {
-      toast.success("Kabhi batla house se nikla bhi kro...");
-    } 
-    else if (lower === "fathima" || lower === "mumthas") {
-      toast.success("Thendi-Poda...");
-    } 
-    else if (lower === "aadil") {
-      toast.success("Saale bomb kyu feka the mere oopar...");
-    } 
-    else if (lower === "zaid") {
-      toast.success("Aur bhai, bhabhi kesi hai?...");
-    } 
-    else if (lower === "saif") {
-      toast.success("Cooling pad mujhe de diyo...");
-    } 
-    else if (lower === "riya" || lower === "jerry") {
-      toast.success("Sudhar jaao wrna shaadi nhi hogi...");
-    } 
-    else if (lower === "jibran") {
-      toast.success("Bhai reels kam dekho...");
-    } 
-    else if (lower === "shaad") {
-      toast.success("Bhai reels kam dekho...");
-    } 
-    
-    else if (lower === "tabish") {
-      toast.success("Tabish bsdk, kam hilao, tab na jaa ke mota hoga...");
-      setTheme("light"); // 👈 switch to light theme
+      msg = "Are Farhan bhai...Aap bhut mast bande ho...";
+    } else if (["shahil", "badar", "danish", "shaad"].includes(lower)) {
+      msg = "Kam hasa kro , aur kam hilao bsdk...";
+    } else if (lower === "kamran") {
+      msg = "Agar jinda rhna h to delhi se bhaag jaao...";
+    } else if (lower === "golrez") {
+      msg = "Kam hasa kro bsdk...";
+    } else if (lower === "nayab") {
+      msg = "Football kam khelo wrna football bn jaaoge nigga...";
+    } else if (lower === "adeeb") {
+      msg = "Le kar hi maanega kya??...";
+    } else if (lower === "ahmad") {
+      msg = "Mujhe apne gaadi m kab ghuma rha???????????????????...";
+    } else if (lower === "tahsin") {
+      msg = "Kabhi batla house se nikla bhi kro...";
+    } else if (["fathima", "mumthas"].includes(lower)) {
+      msg = "Thendi-Poda...";
+    } else if (lower === "aadil") {
+      msg = "Saale bomb kyu feka the mere oopar...";
+    } else if (lower === "zaid") {
+      msg = "Aur bhai, bhabhi kesi hai?...";
+    } else if (lower === "saif") {
+      msg = "Cooling pad mujhe de diyo...";
+    } else if (["riya", "jerry"].includes(lower)) {
+      msg = "Sudhar jaao wrna shaadi nhi hogi...";
+    } else if (lower === "jibran") {
+      msg = "Bhai reels kam dekho...";
+    } else if (lower === "tabish") {
+      msg = "Tabish bsdk, kam hilao, tab na jaa ke mota hoga...";
+      setTheme("light");
     } else if (lower === "anas") {
-      toast.success("Aapki waali mil jaaegi aapko kisi din, INSHALLAH...");
+      msg = "Aapki waali mil jaaegi aapko kisi din, INSHALLAH...";
     } else {
-      setTheme("dark"); // 👈 revert to dark theme when different name
+      setTheme("dark");
+    }
+
+    if (msg) {
+      setPopupMessage(msg);
+      setShowPopup(true);
+      setTimeout(() => setShowPopup(false), 4000); // fixed 4 seconds
     }
   }
 
@@ -111,12 +103,11 @@ const Home = () => {
     <div
       className={`min-h-screen w-full py-10 px-4 flex justify-center transition-all duration-500 ${
         theme === "light"
-          ? "bg-gray-100 text-black" // 👈 light mode
-          : "bg-gradient-to-b from-gray-900 via-gray-950 to-black text-white" // 👈 dark mode
+          ? "bg-gray-100 text-black"
+          : "bg-gradient-to-b from-gray-900 via-gray-950 to-black text-white"
       }`}
     >
       <div className="w-full max-w-4xl flex flex-col gap-6">
-        
         {/* Header Inputs */}
         <div className="flex flex-col sm:flex-row items-center gap-4">
           <input
@@ -153,12 +144,13 @@ const Home = () => {
         </div>
 
         {/* Paste Box */}
-        <div className={`w-full rounded-2xl border overflow-hidden shadow-[0_0_25px_rgba(0,0,0,0.4)] transition-all ${
-          theme === "light"
-            ? "border-gray-300 bg-white"
-            : "border-gray-800 bg-gradient-to-br from-gray-900/70 to-gray-800/40 backdrop-blur-md"
-        }`}>
-          
+        <div
+          className={`w-full rounded-2xl border overflow-hidden shadow-[0_0_25px_rgba(0,0,0,0.4)] transition-all ${
+            theme === "light"
+              ? "border-gray-300 bg-white"
+              : "border-gray-800 bg-gradient-to-br from-gray-900/70 to-gray-800/40 backdrop-blur-md"
+          }`}
+        >
           {/* Top Bar */}
           <div
             className={`flex items-center justify-between px-5 py-3 border-b ${
@@ -176,11 +168,16 @@ const Home = () => {
             <button
               onClick={() => {
                 navigator.clipboard.writeText(value);
-                toast.success("Copied to Clipboard", { position: "top-right" });
+                setPopupMessage("Copied to Clipboard!");
+                setShowPopup(true);
+                setTimeout(() => setShowPopup(false), 5000); // 5 seconds for copy message too
               }}
               className="p-2 rounded-lg hover:bg-gray-700/60 transition-all duration-300 group"
             >
-              <Copy size={20} className="group-hover:text-green-400 transition-colors duration-300" />
+              <Copy
+                size={20}
+                className="group-hover:text-green-400 transition-colors duration-300"
+              />
             </button>
           </div>
 
@@ -198,6 +195,23 @@ const Home = () => {
           />
         </div>
       </div>
+
+      {/* Popup Modal */}
+      {showPopup && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+          <div
+            className={`relative z-10 px-8 py-6 rounded-2xl shadow-2xl text-center max-w-md w-[90%] transition-all duration-500 ${
+              theme === "light"
+                ? "bg-white text-gray-900"
+                : "bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white"
+            }`}
+          >
+            <h2 className="text-xl font-semibold mb-2">Message</h2>
+            <p className="text-base">{popupMessage}</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
