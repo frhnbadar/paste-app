@@ -52,52 +52,99 @@ const Home = () => {
 
   // --- bakchodi function ---
   function bakchodi(val) {
-    const lower = val.toLowerCase();
-    let msg = "";
+  const lower = val.toLowerCase();
+  const funMsgs = {
+    farhan: "Are Farhan bhai... Aap bhut mast bande ho...",
+    shahil: "Kam hasa kro , aur kam hilao bsdk...",
+    badar: "Kam hasa kro , aur kam hilao bsdk...",
+    danish: "Kam hasa kro , aur kam hilao bsdk...",
+    shaad: "Kam hasa kro , aur kam hilao bsdk...",
+    kamran: "Agar jinda rhna h to delhi se bhaag jaao...",
+    golrez: "Kam hasa kro bsdk...",
+    nayab: "Football kam khelo wrna football bn jaaoge nigga...",
+    adeeb: "Le kar hi maanega kya??...",
+    ahmad: "Mujhe apne gaadi m kab ghuma rha???????????????????...",
+    tahsin: "Kabhi batla house se nikla bhi kro...",
+    fathima: "Thendi-Poda...",
+    mumthas: "Thendi-Poda...",
+    aadil: "Saale bomb kyu feka the mere oopar...",
+    zaid: "Aur bhai, bhabhi kesi hai?...",
+    saif: "Cooling pad mujhe de diyo...",
+    riya: "Sudhar jaao wrna shaadi nhi hogi...",
+    jerry: "Sudhar jaao wrna shaadi nhi hogi...",
+    jibran: "Bhai reels kam dekho...",
+    tabish: "Tabish bsdk, kam hilao, tab na jaa ke mota hoga...",
+    anas: "Aapki waali mil jaaegi aapko kisi din, INSHALLAH...",
 
-    if (lower === "farhan") {
-      msg = "Are Farhan bhai...Aap bhut mast bande ho...";
-    } else if (["shahil", "badar", "danish", "shaad"].includes(lower)) {
-      msg = "Kam hasa kro , aur kam hilao bsdk...";
-    } else if (lower === "kamran") {
-      msg = "Agar jinda rhna h to delhi se bhaag jaao...";
-    } else if (lower === "golrez") {
-      msg = "Kam hasa kro bsdk...";
-    } else if (lower === "nayab") {
-      msg = "Football kam khelo wrna football bn jaaoge nigga...";
-    } else if (lower === "adeeb") {
-      msg = "Le kar hi maanega kya??...";
-    } else if (lower === "ahmad") {
-      msg = "Mujhe apne gaadi m kab ghuma rha???????????????????...";
-    } else if (lower === "tahsin") {
-      msg = "Kabhi batla house se nikla bhi kro...";
-    } else if (["fathima", "mumthas"].includes(lower)) {
-      msg = "Thendi-Poda...";
-    } else if (lower === "aadil") {
-      msg = "Saale bomb kyu feka the mere oopar...";
-    } else if (lower === "zaid") {
-      msg = "Aur bhai, bhabhi kesi hai?...";
-    } else if (lower === "saif") {
-      msg = "Cooling pad mujhe de diyo...";
-    } else if (["riya", "jerry"].includes(lower)) {
-      msg = "Sudhar jaao wrna shaadi nhi hogi...";
-    } else if (lower === "jibran") {
-      msg = "Bhai reels kam dekho...";
-    } else if (lower === "tabish") {
-      msg = "Tabish bsdk, kam hilao, tab na jaa ke mota hoga...";
-      setTheme("light");
-    } else if (lower === "anas") {
-      msg = "Aapki waali mil jaaegi aapko kisi din, INSHALLAH...";
-    } else {
-      setTheme("dark");
-    }
+    // Added from your new list:
+    muzamil: "Bhai tu serious kab hota hai zindagi mein?",
+    nehal: "Itna overthink mat kar, exam me bhi nahi likhta tu itna.",
+    shaharyar: "Royal feel aati hai naam se, par attendance zero!",
+    touhid: "Always late, lekin entry heroic hoti hai!",
+    rayyan: "Bhai tera hairstyle hi syllabus se lamba hai.",
+    salman: "Naam bhari, kaam halke.",
+    kaif: "Class me sabse zyada chill banda – marks me sabse kam thrill.",
+    israth: "Tera calmness hi sabko irritate karta hai.",
+    sohail: "Har waqt energy high, jaise battery charge pe chadha ho.",
+    mobashir: "Banda mast hai, bas dimag kabhi kabhi restart maangta hai.",
+    faizal: "Don banne ka sapna, attendance bhi 50 nahi.",
+    ali: "Ali bhai, logic aur luck dono se durr.",
+    hayat: "Naam romantic, coding tragic.",
+    ashraf: "Har cheez me ‘bhai bhai’, but assignment kabhi time pe nahi.",
+    huzaifa: "Banda chill, par system crash hone me expert.",
+    kisa: "Queen attitude, logic zero.",
+    yusuf: "Har jagah advice deta hai, khud pass mushkil se hota hai.",
+    harrish: "Itna silent banda, teachers bhool jaate hain roll call me.",
+    hilal: "Always confused, jaise syllabus dictionary me likha ho.",
+    imbisat: "Bahar se shareef andar se Basmosh’.",
+    kartik: "Har baar bolta hai padhta hu, par result reality check hai.",
+    keshav: "Har project me entry last day pe karta hai.",
+    ahsan: "Tera confidence hi tera biggest scam hai.",
+    fahim: "Har waqt timepass, lekin marks pe shock.",
+    ayan: "Photoshoot me topper, class me dropper.",
+    kaiz: "Naam style ka, attendance file ka.",
+    faizan: "Overconfidence aur underperformance ka combo pack.",
+    kanak: "Har time gossip mode ON, study mode OFF.",
+    divyesh: "Tu IT support nahi bhai, human lag switch hai.",
+    mohafiz: "Bhai tu har jagah serious hota hai, bas practical me nahi.",
+    zayed: "Banda silent killer… mostly attendance ka.",
+    parvez: "Always busy, par padhai ke time vanish.",
+    wasfa: "Class ki drama queen, logic 404.",
+    affan: "Itna chill banda, teacher bhi ignore kar dete.",
+    adnan: "Har baar bolta ‘next time padhta hu’… next time kabhi aata nahi.",
+    umar: "Mujhe lagta tu sirf tea break ke liye college aata hai.",
+    zidan: "Naam footballer ka, attendance wicketkeeper jaisa.",
+    hussain: "Banda serious sirf khaane ke time.",
+    amman: "Always tired, jaise UPSC ka aspirant ho.",
+    bisma: "Selfie pe topper, coding me flop.",
+    arsh: "Tera coding style error ka museum hai.",
+    irfan: "Bhai presentation me speaker, viva me mute.",
+    nafis: "Har baar bolta ‘easy hai’, fail hone ke baad ‘error tha’.",
+    saad: "Chill level itna high, teachers bhi surrender karte.",
+    owais: "Tu banda mast hai, par punctuality se allergic.",
+    saqib: "Everyday attendance zero, excuses hero.",
+    tahir: "Har time ‘bhai adjust kar’ mood me.",
+    sundus: "Har baat pe ‘I know’ bolti hai, result opposite.",
+    aarish: "Banda smart, par kabhi timely nahi.",
+    izyan: "Coding se zyada concern hairstyle ka.",
+    shayan: "Always in cool mode, assignments in pending mode.",
+    parwez: "Chup reh kar bhi dikkat karta hai.",
+    saud: "Sab ka dost, padhai ka dushman.",
+    aiza: "Instagram pe scholar, class me tourist.",
+    faraz: "Itna lost rehta hai, teachers bhi confuse ho jaate hain."
+  };
 
-    if (msg) {
-      setPopupMessage(msg);
-      setShowPopup(true);
-      setTimeout(() => setShowPopup(false), 4000); // fixed 4 seconds
-    }
+  let msg = funMsgs[lower] || "";
+  if (lower === "tabish") setTheme("light");
+  else setTheme("dark");
+
+  if (msg) {
+    setPopupMessage(msg);
+    setShowPopup(true);
+    setTimeout(() => setShowPopup(false), 4000);
   }
+}
+
 
   return (
     <div
