@@ -56,7 +56,7 @@ const Home = () => {
   const funMsgs = {
     farhan: "Are Farhan bhai... Aap bhut mast bande ho...",
     shahil: "Kam hasa kro , aur kam hilao bsdk...",
-    badar: "Kam hasa kro , aur kam hilao bsdk...",
+    badar: "Bhai jaan aap to hot ho, aap k wajah se galcier pighal rhe...",
     danish: "Kam hasa kro , aur kam hilao bsdk...",
     shaad: "Kam hasa kro , aur kam hilao bsdk...",
     kamran: "Agar jinda rhna h to delhi se bhaag jaao...",
@@ -74,7 +74,7 @@ const Home = () => {
     jerry: "Sudhar jaao wrna shaadi nhi hogi...",
     jibran: "Bhai reels kam dekho...",
     tabish: "Tabish bsdk, kam hilao, tab na jaa ke mota hoga...",
-    anas: "Aapki waali mil jaaegi aapko kisi din, INSHALLAH...",
+    anas: "Bhai aap apna thoda sa height mujhe de do...",
 
     // Added from your new list:
     muzamil: "Bhai tu serious kab hota hai zindagi mein?",
