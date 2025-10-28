@@ -131,8 +131,8 @@ const Home = () => {
     parwez: "Chup reh kar bhi dikkat karta hai.",
     saud: "Sab ka dost, padhai ka dushman.",
     aiza: "Instagram pe scholar, class me tourist.",
-    faraz: "Itna lost rehta hai, teachers bhi confuse ho jaate hain."
-    shamma: "Great pattukari, want to see you singing with atif aslam"
+    faraz: "Itna lost rehta hai, teachers bhi confuse ho jaate hain.",
+    shamma: "Great pattukari, want to see you singing with atif aslam",
   };
 
   let msg = funMsgs[lower] || "";
