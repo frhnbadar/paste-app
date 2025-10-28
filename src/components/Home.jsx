@@ -63,6 +63,12 @@ const Home = () => {
     else if (lower === "golrez") {
       toast.success("Kam hasa kro bsdk...");
     } 
+    else if (lower === "nayab") {
+      toast.success("Football kam khelo wrna football bn jaaoge nigga...");
+    } 
+    else if (lower === "adeeb") {
+      toast.success("Le kar hi maanega kya??...");
+    } 
     else if (lower === "ahmad") {
       toast.success("Mujhe apne gaadi m kab ghuma rha???????????????????...");
     } 
