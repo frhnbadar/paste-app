@@ -75,7 +75,7 @@ const Home = () => {
       riya: "Sudhar jaao wrna shaadi nhi hogi...",
       jerry: "Sudhar jaao wrna shaadi nhi hogi...",
       jibran: "Bhai reels kam dekho...",
-      tabish: "Tabish bsdk, kam hilao, tab na jaa ke mota hoga...",
+      tabish: "Ab to room m aagye hm , ab mza aaega...",
       anas: "Bhai aap apna thoda sa height mujhe de do...",
 
       // Added from your new list:
