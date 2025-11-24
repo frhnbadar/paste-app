@@ -156,7 +156,7 @@ const Home = () => {
 
   return (
     <div className={`min-h-screen w-full py-10 px-4 flex justify-center transition-all duration-500 ${theme === "light"
-      ? "bg-gray-100 text-black"
+      ? "bg-black text-cyan-300"
       : "bg-gradient-to-b from-gray-900 via-gray-950 to-black text-white"
       }`}
     >
