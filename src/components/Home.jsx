@@ -103,7 +103,7 @@ const Home = () => {
       keshav: "Har project me entry last day pe karta hai.",
       ahsan: "Tera confidence hi tera biggest scam hai.",
       fahim: "Har waqt timepass, lekin marks pe shock.",
-      ayan: "Photoshoot me topper, class me dropper.",
+      ayan: "MR. Freshers",
       kaiz: "Naam style ka, attendance file ka.",
       faizan: "Overconfidence aur underperformance ka combo pack.",
       kanak: "Har time gossip mode ON, study mode OFF.",
@@ -273,11 +273,11 @@ const Home = () => {
           </motion.div>
         </div>
       )}
-      </div>
-      );
-      };
+    </div>
+  );
+};
 
 
 
 
-      export default Home;
+export default Home;
