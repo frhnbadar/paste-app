@@ -80,6 +80,7 @@ const Home = () => {
 
       // Added from your new list:
       muzamil: "Bhai tu serious kab hota hai zindagi mein?",
+      azad:"Life Doesn't give us a second chance...",
       nehal: "Itna overthink mat kar, exam me bhi nahi likhta tu itna.",
       shaharyar: "Royal feel aati hai naam se, par attendance zero!",
       touhid: "Always late, lekin entry heroic hoti hai!",
