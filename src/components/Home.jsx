@@ -129,7 +129,7 @@ const Home = () => {
       tahir: "Har time ‘bhai adjust kar’ mood me.",
       sundus: "Har baat pe ‘I know’ bolti hai, result opposite.",
       aarish: "Banda smart, par kabhi timely nahi.",
-      izyan: "Coding se zyada concern hairstyle ka.",
+      izyan: "Hamesha late class m.",
       shayan: "Always in cool mode, assignments in pending mode.",
       parwez: "Chup reh kar bhi dikkat karta hai.",
       saud: "Sab ka dost, padhai ka dushman.",
