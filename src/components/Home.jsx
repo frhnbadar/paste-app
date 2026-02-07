@@ -141,6 +141,8 @@ const Home = () => {
       tarun: "Bhai aapka to set hai , IIIT kota + Girlfrend",
       davar: "kyu re saste srk, kb mil rha delhi mai",
       tanish: "Saale kam hilaya kr , patla hote jaa rha...",
+      fiza: "thoda kam padho , itna sgpa ka kya kroge",
+      priya:"itne chup kyu rhte ho aap?",
     };
 
     let msg = funMsgs[lower] || "";
