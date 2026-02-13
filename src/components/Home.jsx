@@ -1,19 +1,31 @@
 import { Copy, PlusCircle } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addToPastes, updatePastes } from "../redux/pasteSlice";
 import { useSearchParams } from "react-router-dom";
 import React from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
+// ✅ Put your video at: src/assets/ayan.mp4
+import ayanVideo from "../assets/ayan.mp4";
 
 const Home = () => {
   const [value, setValue] = useState("");
   const [title, setTitle] = useState("");
   const [theme, setTheme] = useState("dark");
 
+  // Existing popup (your fun messages + copy message)
   const [showPopup, setShowPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
+
+  // ✅ New: Ayan confirmation + video overlay
+  const [showAyanConfirm, setShowAyanConfirm] = useState(false);
+  const [showAyanVideo, setShowAyanVideo] = useState(false);
+
+  // prevents spamming popup every keystroke while "ayan" remains in textarea
+  const [ayanLock, setAyanLock] = useState(false);
+
+  const videoRef = useRef(null);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const pasteId = searchParams.get("pasteId");
@@ -77,10 +89,8 @@ const Home = () => {
       jibran: "Bhai reels kam dekho...",
       tabish: "Ab to room m aagye hm , ab mza aaega...",
       anas: "Bhai aap apna thoda sa height mujhe de do...",
-
-      // Added from your new list:
       muzamil: "Bhai tu serious kab hota hai zindagi mein?",
-      azad:"Life Doesn't give us a second chance...",
+      azad: "Life Doesn't give us a second chance...",
       nehal: "Itna overthink mat kar, exam me bhi nahi likhta tu itna.",
       shaharyar: "Royal feel aati hai naam se, par attendance zero!",
       touhid: "Always late, lekin entry heroic hoti hai!",
@@ -142,7 +152,7 @@ const Home = () => {
       davar: "kyu re saste srk, kb mil rha delhi mai",
       tanish: "Saale kam hilaya kr , patla hote jaa rha...",
       fiza: "thoda kam padho , itna sgpa ka kya kroge",
-      priya:"itne chup kyu rhte ho aap?",
+      priya: "itne chup kyu rhte ho aap?",
     };
 
     let msg = funMsgs[lower] || "";
@@ -152,15 +162,57 @@ const Home = () => {
     if (msg) {
       setPopupMessage(msg);
       setShowPopup(true);
-      ;
     }
   }
 
+  // ✅ Detect "ayan" in textarea (case-insensitive), show confirm popup once per presence
+  useEffect(() => {
+    const hasAyan = value.toLowerCase().includes("ayan");
+
+    if (hasAyan && !ayanLock) {
+      setShowAyanConfirm(true);
+      setAyanLock(true);
+    }
+
+    // unlock only when "ayan" is removed, so it can trigger again later
+    if (!hasAyan && ayanLock) {
+      setAyanLock(false);
+    }
+  }, [value, ayanLock]);
+
+  // ✅ When video overlay opens, auto-play
+  useEffect(() => {
+    if (showAyanVideo && videoRef.current) {
+      const v = videoRef.current;
+      v.currentTime = 0;
+      const p = v.play();
+      if (p && typeof p.catch === "function") p.catch(() => {});
+    }
+  }, [showAyanVideo]);
+
+  const confirmAyan = () => {
+    setShowAyanConfirm(false);
+    setShowAyanVideo(true);
+  };
+
+  const cancelAyan = () => {
+    setShowAyanConfirm(false);
+  };
+
+  const closeAyanVideo = () => {
+    setShowAyanVideo(false);
+    if (videoRef.current) {
+      videoRef.current.pause();
+      videoRef.current.currentTime = 0;
+    }
+  };
 
   return (
-    <div className={`min-h-screen w-full py-10 px-4 flex justify-center transition-all duration-500 ${theme === "light"
-      ? "bg-black text-cyan-300"
-      : "bg-gradient-to-b from-gray-900 via-gray-950 to-black text-white"
+    <div
+      className={`min-h-screen w-full py-10 px-4 flex justify-center transition-all duration-500 ${
+        theme === "light"
+          ? "bg-black text-cyan-300"
+          : "bg-gradient-to-b from-gray-900 via-gray-950 to-black text-white"
       }`}
     >
       <div className="w-full max-w-4xl flex flex-col gap-6">
@@ -175,10 +227,11 @@ const Home = () => {
               setTitle(val);
               bakchodi(val);
             }}
-            className={`flex-1 w-full ${theme === "light"
-              ? "bg-white text-black border-gray-300"
-              : "bg-gradient-to-r from-gray-800 to-gray-700 text-white border-gray-700"
-              } placeholder-gray-400 border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300`}
+            className={`flex-1 w-full ${
+              theme === "light"
+                ? "bg-white text-black border-gray-300"
+                : "bg-gradient-to-r from-gray-800 to-gray-700 text-white border-gray-700"
+            } placeholder-gray-400 border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300`}
           />
 
           <button
@@ -200,17 +253,19 @@ const Home = () => {
 
         {/* Paste Box */}
         <div
-          className={`w-full rounded-2xl border overflow-hidden shadow-[0_0_25px_rgba(0,0,0,0.4)] transition-all ${theme === "light"
-            ? "border-gray-300 bg-white"
-            : "border-gray-800 bg-gradient-to-br from-gray-900/70 to-gray-800/40 backdrop-blur-md"
-            }`}
+          className={`w-full rounded-2xl border overflow-hidden shadow-[0_0_25px_rgba(0,0,0,0.4)] transition-all ${
+            theme === "light"
+              ? "border-gray-300 bg-white"
+              : "border-gray-800 bg-gradient-to-br from-gray-900/70 to-gray-800/40 backdrop-blur-md"
+          }`}
         >
           {/* Top Bar */}
           <div
-            className={`flex items-center justify-between px-5 py-3 border-b ${theme === "light"
-              ? "border-gray-200 bg-gray-100"
-              : "border-gray-700 bg-gradient-to-r from-gray-800/80 to-gray-900/60"
-              }`}
+            className={`flex items-center justify-between px-5 py-3 border-b ${
+              theme === "light"
+                ? "border-gray-200 bg-gray-100"
+                : "border-gray-700 bg-gradient-to-r from-gray-800/80 to-gray-900/60"
+            }`}
           >
             <div className="flex items-center gap-2">
               <div className="w-3.5 h-3.5 rounded-full bg-red-500" />
@@ -223,7 +278,7 @@ const Home = () => {
                 navigator.clipboard.writeText(value);
                 setPopupMessage("Copied to Clipboard!");
                 setShowPopup(true);
-                setTimeout(() => setShowPopup(false), 5000); // 5 seconds for copy message too
+                setTimeout(() => setShowPopup(false), 5000);
               }}
               className="p-2 rounded-lg hover:bg-gray-700/60 transition-all duration-300 group"
             >
@@ -239,48 +294,119 @@ const Home = () => {
             value={value}
             onChange={(e) => setValue(e.target.value)}
             placeholder="Write your content here..."
-            className={`w-full h-[400px] p-4 resize-none focus:outline-none ${theme === "light"
-              ? "text-black bg-white placeholder-gray-500"
-              : "text-gray-100 bg-transparent placeholder-gray-500"
-              }`}
+            className={`w-full h-[400px] p-4 resize-none focus:outline-none ${
+              theme === "light"
+                ? "text-black bg-white placeholder-gray-500"
+                : "text-gray-100 bg-transparent placeholder-gray-500"
+            }`}
             style={{ caretColor: "#3b82f6" }}
           />
         </div>
       </div>
 
-      {/* Popup Modal */}
-      {/* Popup Modal (Top Slide with Close Button) */}
-      {showPopup && (
-        <div className="fixed inset-0 flex items-start justify-center pt-6 bg-black/30 backdrop-blur-sm z-50">
-          <motion.div
-            initial={{ y: -50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -50, opacity: 0 }}
-            transition={{ duration: 0.4, ease: 'easeOut' }}
-            className={`relative px-8 py-5 rounded-xl shadow-2xl text-center max-w-md w-[90%] border ${theme === "light"
-              ? "bg-white text-gray-900 border-gray-300"
-              : "bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white border-gray-700"
+      {/* ✅ Existing Popup Modal (fun msgs + copy msg) */}
+      <AnimatePresence>
+        {showPopup && (
+          <div className="fixed inset-0 flex items-start justify-center pt-6 bg-black/30 backdrop-blur-sm z-50">
+            <motion.div
+              initial={{ y: -50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -50, opacity: 0 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+              className={`relative px-8 py-5 rounded-xl shadow-2xl text-center max-w-md w-[90%] border ${
+                theme === "light"
+                  ? "bg-white text-gray-900 border-gray-300"
+                  : "bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white border-gray-700"
               }`}
-          >
-            {/* Close Button */}
-            <button
-              onClick={() => setShowPopup(false)}
-              className="absolute top-2 right-3 text-2xl font-bold text-gray-400 hover:text-red-500 transition-colors duration-300"
-              aria-label="Close popup"
             >
-              ×
-            </button>
+              <button
+                onClick={() => setShowPopup(false)}
+                className="absolute top-2 right-3 text-2xl font-bold text-gray-400 hover:text-red-500 transition-colors duration-300"
+                aria-label="Close popup"
+              >
+                ×
+              </button>
 
-            <h2 className="text-lg font-semibold mb-2">Message</h2>
-            <p className="text-base">{popupMessage}</p>
-          </motion.div>
-        </div>
-      )}
+              <h2 className="text-lg font-semibold mb-2">Message</h2>
+              <p className="text-base">{popupMessage}</p>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* ✅ NEW: Ayan Confirm Popup */}
+      <AnimatePresence>
+        {showAyanConfirm && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-[60] px-4">
+            <motion.div
+              initial={{ scale: 0.92, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.92, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className={`w-full max-w-md rounded-2xl border shadow-2xl p-6 ${
+                theme === "light"
+                  ? "bg-white text-gray-900 border-gray-300"
+                  : "bg-gray-950 text-white border-gray-800"
+              }`}
+            >
+              <h3 className="text-xl font-semibold mb-2">Confirmation</h3>
+              <p className="text-sm text-gray-300 mb-6">
+                You typed <span className="font-semibold text-white">ayan</span>.
+                Kya aap ye risk lena chahte h, bas kilas mat jaaiyega?
+              </p>
+
+              <div className="flex gap-3 justify-end">
+                <button
+                  onClick={cancelAyan}
+                  className="px-4 py-2 rounded-xl border border-gray-700 hover:bg-gray-800 transition"
+                >
+                  No
+                </button>
+                <button
+                  onClick={confirmAyan}
+                  className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 transition font-semibold"
+                >
+                  Yes, Play
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* ✅ NEW: Video Overlay */}
+      <AnimatePresence>
+        {showAyanVideo && (
+          <div className="fixed inset-0 bg-black/80 z-[70] flex items-center justify-center px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.25 }}
+              className="w-full max-w-3xl rounded-2xl overflow-hidden border border-gray-800 shadow-2xl relative bg-black"
+            >
+              <button
+                onClick={closeAyanVideo}
+                className="absolute top-3 right-3 z-10 px-3 py-1 rounded-lg bg-black/60 hover:bg-black/80 text-white border border-white/20"
+                aria-label="Close video"
+              >
+                ✕
+              </button>
+
+              <video
+                ref={videoRef}
+                src={ayanVideo}
+                controls
+                autoPlay
+                className="w-full h-auto"
+                onEnded={closeAyanVideo}
+              />
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
-
-
-
 
 export default Home;
